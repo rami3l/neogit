@@ -8,7 +8,7 @@ local M = {}
 -- Async
 function M.commits()
   local git = require("neogit.lib.git")
-  local output = git.cli.log.format("fuller").args("--graph").call(true).stdout
+  local output = git.cli.log.format("fuller").args("-20", "--graph").call(true).stdout
 
   return log.parse(output)
 end
