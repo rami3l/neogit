@@ -8,7 +8,14 @@ local M = {}
 -- Async
 function M.commits()
   local git = require("neogit.lib.git")
-  local output = git.cli.log.format("fuller").args("-20", "--graph").call(true).stdout
+  local config = require("neogit.config")
+  local count = config.values.status.recent_commit_count
+  if count == nil or count < 1 then
+    count = 20
+  end
+
+  local output =
+    git.cli.log.format("fuller").args("--no-merges").max_count(count).show_popup(false).call(false).stdout
 
   return log.parse(output)
 end
