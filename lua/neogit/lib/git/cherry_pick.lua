@@ -1,7 +1,7 @@
-local cli = require("neogit.lib.git.cli")
-local logger = require("neogit.logger")
-local notif = require("neogit.lib.notification")
 local util = require("neogit.lib.util")
+local logger = require("neogit.logger")
+local cli = require("neogit.lib.git.cli")
+local notif = require("neogit.lib.notification")
 
 local M = {}
 

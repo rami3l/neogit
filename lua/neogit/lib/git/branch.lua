@@ -49,11 +49,11 @@ function M.get_upstream()
   local current = cli.branch.current.show_popup(false).call():trim().stdout
 
   if #full_name > 0 and #current > 0 then
-    local remote = config_lib.get("branch." .. current[1] .. ".remote").value
+    local remote = config_lib.get("branch." .. current[1] .. ".remote")
     if remote then
       return {
-        remote = remote,
-        branch = full_name[1]:sub(#remote + 2, -1),
+        remote = remote.value,
+        branch = full_name[1]:sub(#remote.value + 2, -1),
       }
     end
   end

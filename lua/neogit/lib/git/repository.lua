@@ -38,11 +38,7 @@ local function empty_state()
     },
     rebase = {
       items = {},
-      head = nil,
-    },
-    cherry_pick = {
-      items = {},
-      head = nil,
+      head = "",
     },
     merge = {
       items = {},
