@@ -51,7 +51,7 @@ end
 
 ---@return ConfigEntry|nil
 function M.get(key)
-  return config()[key:lower()] or {}
+  return config()[key:lower()]
 end
 
 function M.get_global(key)
