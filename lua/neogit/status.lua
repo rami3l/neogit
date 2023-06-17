@@ -19,7 +19,7 @@ local M = {}
 M.disabled = false
 M.current_operation = nil
 M.prev_autochdir = nil
-M.repo = repository.create()
+M.repo = repository.state
 M.status_buffer = nil
 M.commit_view = nil
 ---@class Section
@@ -407,67 +407,68 @@ local function refresh(which, reason)
   local s, f, h = save_cursor_location()
 
   if cli.git_root() ~= "" then
-    if which == true or which.status then
-      M.repo:update_status()
-      a.util.scheduler()
-      refresh_status_buffer()
-    end
+    -- if which == true or which.status then
+    --   repository.lib:update_status()
+    --   a.util.scheduler()
+    --   refresh_status_buffer()
+    -- end
 
-    local refreshes = {}
-    if which == true or which.branch_information then
-      table.insert(refreshes, function()
-        logger.debug("[STATUS BUFFER]: Refreshing branch information")
-        M.repo:update_branch_information()
-      end)
-    end
-    if which == true or which.rebase then
-      table.insert(refreshes, function()
-        logger.debug("[STATUS BUFFER]: Refreshing rebase information")
-        M.repo:update_rebase_status()
-      end)
-    end
+    -- local refreshes = {}
+    -- if which == true or which.branch_information then
+    --   table.insert(refreshes, function()
+    --     logger.debug("[STATUS BUFFER]: Refreshing branch information")
+    --     M.repo:update_branch_information()
+    --   end)
+    -- end
+    -- if which == true or which.rebase then
+    --   table.insert(refreshes, function()
+    --     logger.debug("[STATUS BUFFER]: Refreshing rebase information")
+    --     M.repo:update_rebase_status()
+    --   end)
+    -- end
 
-    if which == true or which.rebase then
-      table.insert(refreshes, function()
-        logger.debug("[STATUS BUFFER]: Refreshing merge information")
-        M.repo:update_merge_status()
-      end)
-    end
+    -- if which == true or which.rebase then
+    --   table.insert(refreshes, function()
+    --     logger.debug("[STATUS BUFFER]: Refreshing merge information")
+    --     M.repo:update_merge_status()
+    --   end)
+    -- end
 
-    if which == true or which.stashes then
-      table.insert(refreshes, function()
-        logger.debug("[STATUS BUFFER]: Refreshing stash")
-        M.repo:update_stashes()
-      end)
-    end
-    if which == true or which.unpulled then
-      table.insert(refreshes, function()
-        logger.debug("[STATUS BUFFER]: Refreshing unpulled commits")
-        M.repo:update_unpulled()
-      end)
-    end
-    if which == true or which.unmerged then
-      table.insert(refreshes, function()
-        logger.debug("[STATUS BUFFER]: Refreshing unpushed commits")
-        M.repo:update_unmerged()
-      end)
-    end
-    if which == true or which.recent then
-      table.insert(refreshes, function()
-        logger.debug("[STATUS BUFFER]: Refreshing recent commits")
-        M.repo:update_recent()
-      end)
-    end
-    if which == true or which.diffs then
-      local filter = (type(which) == "table" and type(which.diffs) == "table") and which.diffs or nil
+    -- if which == true or which.stashes then
+    --   table.insert(refreshes, function()
+    --     logger.debug("[STATUS BUFFER]: Refreshing stash")
+    --     M.repo:update_stashes()
+    --   end)
+    -- end
+    -- if which == true or which.unpulled then
+    --   table.insert(refreshes, function()
+    --     logger.debug("[STATUS BUFFER]: Refreshing unpulled commits")
+    --     M.repo:update_unpulled()
+    --   end)
+    -- end
+    -- if which == true or which.unmerged then
+    --   table.insert(refreshes, function()
+    --     logger.debug("[STATUS BUFFER]: Refreshing unpushed commits")
+    --     M.repo:update_unmerged()
+    --   end)
+    -- end
+    -- if which == true or which.recent then
+    --   table.insert(refreshes, function()
+    --     logger.debug("[STATUS BUFFER]: Refreshing recent commits")
+    --     M.repo:update_recent()
+    --   end)
+    -- end
+    -- if which == true or which.diffs then
+    --   local filter = (type(which) == "table" and type(which.diffs) == "table") and which.diffs or nil
 
-      table.insert(refreshes, function()
-        logger.debug("[STATUS BUFFER]: Refreshing diffs")
-        M.repo:load_diffs(filter)
-      end)
-    end
-    logger.debug(string.format("[STATUS BUFFER]: Running %d refresh(es)", #refreshes))
-    a.util.join(refreshes)
+    --   table.insert(refreshes, function()
+    --     logger.debug("[STATUS BUFFER]: Refreshing diffs")
+    --     M.repo:load_diffs(filter)
+    --   end)
+    -- end
+    -- logger.debug(string.format("[STATUS BUFFER]: Running %d refresh(es)", #refreshes))
+    -- a.util.join(refreshes)
+    repository:refresh()
     logger.debug("[STATUS BUFFER]: Refreshes completed")
     a.util.scheduler()
 

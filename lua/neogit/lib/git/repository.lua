@@ -174,6 +174,7 @@ if not M.initialized then
   }
 
   for _, m in ipairs(modules) do
+    print("Registering " .. m)
     require("neogit.lib.git." .. m).register(M.lib)
   end
 end
