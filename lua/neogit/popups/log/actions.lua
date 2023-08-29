@@ -17,8 +17,17 @@ local function maybe_graph(popup)
   end
 end
 
+---Get Commits for log view
+---@param popup Popup
+---@param extras table|nil
+---@return CommitLogEntry[]
 local function commits(popup, extras)
-  return git.log.list(util.merge(popup:get_arguments(), extras or {}), maybe_graph(popup))
+  extras = extras or {}
+  if popup:get_internal_arguments().graph then
+    table.insert(extras, "--topo-order")
+  end
+
+  return git.log.list(util.merge(popup:get_arguments(), extras), maybe_graph(popup))
 end
 
 -- TODO: Handle when head is detached
