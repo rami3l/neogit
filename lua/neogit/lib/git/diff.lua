@@ -194,7 +194,7 @@ end
 local function raw_untracked(name)
   return function()
     local diff =
-      cli.diff.no_ext_diff.no_index.files("/dev/null", name).call_ignoring_exit_code():trim().stdout
+      cli.diff.no_ext_diff.no_index.files("/dev/null", name).call({ silent = true }):trim().stdout
     local stats = {}
 
     return { diff, stats }

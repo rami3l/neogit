@@ -390,7 +390,7 @@ end
 ---@param b string commit hash
 ---@return boolean
 function M.is_ancestor(a, b)
-  return cli["merge-base"].is_ancestor.args(a, b):call_sync_ignoring_exit_code():trim().code == 0
+  return cli["merge-base"].is_ancestor.args(a, b):call_sync({ silent = true }):trim().code == 0
 end
 
 local function update_recent(state)
@@ -432,7 +432,7 @@ end
 ---@param commit string Hash of commit
 ---@return string The stderr output of the command
 function M.verify_commit(commit)
-  return cli["verify-commit"].args(commit).call_sync_ignoring_exit_code():trim().stderr
+  return cli["verify-commit"].args(commit).call_sync({ silent = true }):trim().stderr
 end
 
 return M

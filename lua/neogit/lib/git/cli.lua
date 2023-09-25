@@ -525,10 +525,12 @@ end
 
 local history = {}
 
-local function handle_new_cmd(job, popup, hidden_text)
+local function handle_new_cmd(job, popup, hidden_text, opts)
   if popup == nil then
     popup = true
   end
+
+  opts = vim.tbl_extend("keep", opts or {}, { silent = false })
 
   table.insert(history, {
     cmd = hidden_text and job.cmd:gsub(hidden_text, string.rep("*", #hidden_text)) or job.cmd,
@@ -539,11 +541,16 @@ local function handle_new_cmd(job, popup, hidden_text)
     time = job.time,
   })
 
+  if opts.silent then
+    return
+  end
+
   do
     local log_fn = logger.trace
     if job.code > 0 then
       log_fn = logger.error
     end
+
     if job.code > 0 then
       log_fn(
         string.format("[CLI] Execution of '%s' failed with code %d after %d ms", job.cmd, job.code, job.time)
@@ -766,7 +773,7 @@ local function new_builder(subcommand)
     env = {},
   }
 
-  local function to_process(verbose, suppress_error, ignore_code)
+  local function to_process(opts)
     local cmd = {}
 
     for _, o in ipairs(state.options) do
@@ -801,9 +808,8 @@ local function new_builder(subcommand)
       cwd = state.cwd,
       env = state.env,
       pty = state.in_pty,
-      verbose = verbose,
-      ignore_code = ignore_code,
-      on_error = suppress_error,
+      verbose = opts.verbose,
+      on_error = opts.on_error,
     }
   end
 
@@ -812,9 +818,11 @@ local function new_builder(subcommand)
     [k_config] = configuration,
     [k_command] = subcommand,
     to_process = to_process,
-    call_interactive = function(handle_line)
+    call_interactive = function(handle_line, opts)
+      opts = vim.tbl_extend("force", opts or {}, { verbose = true })
+
       handle_line = handle_line or handle_interactive_password_questions
-      local p = to_process(true, false)
+      local p = to_process(opts)
       p.pty = true
 
       p.on_partial_line = function(p, line, _)
@@ -838,28 +846,19 @@ local function new_builder(subcommand)
         stderr = result.stderr,
         code = result.code,
         time = result.time,
-      }, state.show_popup, state.hide_text)
+      }, state.show_popup, state.hide_text, opts)
 
       return result
     end,
-    call_ignoring_exit_code = function(verbose)
-      local p = to_process(verbose, false, true)
-      local result = p:spawn_async()
+    call = function(opts)
+      opts = vim.tbl_extend("keep", opts or {}, { verbose = false })
+      if opts.silent then
+        opts.on_error = function()
+          return true
+        end
+      end
 
-      assert(result, "Command did not complete")
-
-      handle_new_cmd({
-        cmd = table.concat(p.cmd, " "),
-        stdout = result.stdout,
-        stderr = result.stderr,
-        code = 0,
-        time = result.time,
-      }, state.show_popup, state.hide_text)
-
-      return result
-    end,
-    call = function(verbose)
-      local p = to_process(verbose, not state.show_popup)
+      local p = to_process(opts)
       local result = p:spawn_async(function()
         -- Required since we need to do this before awaiting
         if state.input then
@@ -879,12 +878,19 @@ local function new_builder(subcommand)
         stderr = result.stderr,
         code = result.code,
         time = result.time,
-      }, state.show_popup, state.hide_text)
+      }, state.show_popup, state.hide_text, opts)
 
       return result
     end,
-    call_sync = function(verbose, external_errors)
-      local p = to_process(verbose, external_errors)
+    call_sync = function(opts)
+      opts = vim.tbl_extend("keep", opts or {}, { verbose = false })
+      if opts.silent then
+        opts.on_error = function()
+          return true
+        end
+      end
+
+      local p = to_process(opts)
 
       if not p:spawn() then
         error("Failed to run command")
@@ -900,28 +906,7 @@ local function new_builder(subcommand)
         stderr = result.stderr,
         code = result.code,
         time = result.time,
-      }, state.show_popup, state.hide_text)
-
-      return result
-    end,
-    call_sync_ignoring_exit_code = function(verbose, external_errors)
-      local p = to_process(verbose, external_errors, true)
-
-      if not p:spawn() then
-        error("Failed to run command")
-        return nil
-      end
-
-      local result = p:wait()
-      assert(result, "Command did not complete")
-
-      handle_new_cmd({
-        cmd = table.concat(p.cmd, " "),
-        stdout = result.stdout,
-        stderr = result.stderr,
-        code = 0,
-        time = result.time,
-      }, state.show_popup, state.hide_text)
+      }, state.show_popup, state.hide_text, opts)
 
       return result
     end,

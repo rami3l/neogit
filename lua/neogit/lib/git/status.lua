@@ -135,7 +135,7 @@ local function update_status(state)
     upstream.unpulled = state.upstream.unpulled
   end
 
-  local tag = git.cli.describe.long.tags.args("HEAD").call_ignoring_exit_code():trim().stdout
+  local tag = git.cli.describe.long.tags.args("HEAD").call({ silent = true }):trim().stdout
   if #tag == 1 then
     local tag, distance = tostring(tag[1]):match(tag_pattern)
     if tag and distance then
