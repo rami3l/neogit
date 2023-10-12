@@ -11,8 +11,6 @@ local Collection = require("neogit.lib.collection")
 local function update_file(cwd, file, mode, name, original_name)
   local mt, diff, has_diff
 
-  local absolute_path = Path:new(cwd, name):absolute()
-
   if file then
     mt = getmetatable(file)
     has_diff = file.has_diff
@@ -28,7 +26,7 @@ local function update_file(cwd, file, mode, name, original_name)
     original_name = original_name,
     has_diff = has_diff,
     diff = diff,
-    absolute_path = absolute_path,
+    absolute_path = Path:new(cwd, name):absolute(),
   }, mt or {})
 end
 
@@ -91,11 +89,18 @@ local function update_status(state)
       -- 2 = Renamed/Copied Entries
       -- ? = Untracked
       -- ! = Ignored
+      --
+      -- modes:
+      -- UU = Both Modified
 
       if kind == "u" then
         local mode, _, _, _, _, _, _, _, _, name = rest:match(match_u)
 
-        table.insert(untracked_files, { mode = mode, name = name })
+        if mode == "UU" then
+          table.insert(unstaged_files, update_file(cwd, old_files_hash.unstaged_files[name], mode, name))
+        else
+          table.insert(untracked_files, { mode = mode, name = name })
+        end
       elseif kind == "?" then
         table.insert(untracked_files, update_file(cwd, old_files_hash.untracked_files[rest], nil, rest))
       elseif kind == "1" then

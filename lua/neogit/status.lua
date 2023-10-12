@@ -50,9 +50,14 @@ M.outdated = {}
 ---@field folded boolean|nil
 ---@field hunks Hunk[]|nil
 
-local head_start = "@"
-local add_start = "+"
-local del_start = "-"
+local head_start = "@@"
+local add_start = "+ "
+local del_start = "- "
+local conflict = "++"
+local conflict_start = "++<"
+local conflict_base = "++|"
+local conflict_break = "++="
+local conflict_end = "++>"
 
 local function get_section_idx_for_line(linenr)
   for i, l in pairs(M.locations) do
@@ -1345,16 +1350,31 @@ local function set_decoration_provider(buffer)
       local text = buffer:get_line(line)[1]
       if text then
         local highlight
-        local start = string.sub(text, 1, 1)
+        local start = string.sub(text, 1, 2)
         local _, _, hunk, _, _ = save_cursor_location(line)
 
         if start == head_start then
           highlight = "NeogitHunkHeader"
         elseif line == cursor_line then
           highlight = "NeogitCursorLine"
+        elseif start == conflict then
+          local extended_start = string.sub(text, 1, 3)
+          if extended_start == conflict_start then
+            highlight = "NeogitDiffConflictHeader"
+          elseif extended_start == conflict_base then
+            highlight = "NeogitDiffConflictHeader"
+          elseif extended_start == conflict_break then
+            highlight = "NeogitDiffConflictHeader"
+          elseif extended_start == conflict_end then
+            highlight = "NeogitDiffConflictHeader"
+          elseif extended_start == "++ " then
+            highlight = "NeogitDiffConflictSection"
+          end
         elseif start == add_start then
           highlight = "NeogitDiffAdd"
         elseif start == del_start then
+          highlight = "NeogitDiffDelete"
+        elseif start == " +" then
           highlight = "NeogitDiffDelete"
         elseif hunk then
           highlight = "NeogitDiffContext"
