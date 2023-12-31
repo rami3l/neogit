@@ -1,10 +1,12 @@
 local actions = require("neogit.popups.remote.actions")
+local util = require("neogit.lib.util")
 local git = require("neogit.lib.git")
 local popup = require("neogit.lib.popup")
 
 local M = {}
 
-function M.create()
+-- TODO: Pass env here so you can remove a remote from refs view
+function M.create(env)
   local p = popup
     .builder()
     :name("NeogitRemotePopup")
@@ -30,7 +32,7 @@ function M.create()
     :action("P", "Prune stale refspecs")
     :action("b", "Update default branch")
     :action("z", "Unshallow remote")
-    :env({ highlight = { git.branch.pushRemote() } })
+    :env(util.merge({ highlight = { git.branch.pushRemote() } }, env))
     :build()
 
   p:show()

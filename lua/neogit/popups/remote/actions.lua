@@ -22,6 +22,19 @@ local function ask_to_set_pushDefault()
   end
 end
 
+---@param popup Popup
+---@return string|nil
+local function get_remote(popup)
+  local remote
+  if popup.state.env.remote then
+    remote = popup.state.env.remote
+  else
+    remote = FuzzyFinderBuffer.new(git.remote.list()):open_async()
+  end
+
+  return remote
+end
+
 M.add = operation("add_remote", function(popup)
   local name = input.get_user_input("Remote name: ")
   if not name or name == "" then
@@ -60,8 +73,9 @@ M.add = operation("add_remote", function(popup)
   end
 end)
 
-function M.rename(_)
-  local selected_remote = FuzzyFinderBuffer.new(git.remote.list()):open_async()
+---@param popup Popup
+function M.rename(popup)
+  local selected_remote = get_remote(popup)
   if not selected_remote then
     return
   end
@@ -77,8 +91,9 @@ function M.rename(_)
   end
 end
 
-function M.remove(_)
-  local selected_remote = FuzzyFinderBuffer.new(git.remote.list()):open_async()
+---@param popup Popup
+function M.remove(popup)
+  local selected_remote = get_remote(popup)
   if not selected_remote then
     return
   end
@@ -89,8 +104,9 @@ function M.remove(_)
   end
 end
 
-function M.configure(_)
-  local remote_name = FuzzyFinderBuffer.new(git.remote.list()):open_async()
+---@param popup Popup
+function M.configure(popup)
+  local remote_name = get_remote(popup)
   if not remote_name then
     return
   end
@@ -98,8 +114,9 @@ function M.configure(_)
   RemoteConfigPopup.create(remote_name)
 end
 
-function M.prune_branches(_)
-  local selected_remote = FuzzyFinderBuffer.new(git.remote.list()):open_async()
+---@param popup Popup
+function M.prune_branches(popup)
+  local selected_remote = get_remote(popup)
   if not selected_remote then
     return
   end
