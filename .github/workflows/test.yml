@@ -15,12 +15,15 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          mkdir -p ~/.local/share/neogit-test/site/pack/plenary.nvim/start
-          cd ~/.local/share/neogit-test/site/pack/plenary.nvim/start
+          mkdir -p ~/.local/share/neogit-test/site/pack/
+          cd ~/.local/share/neogit-test/site/pack/
+
+          mkdir -p ./plenary.nvim/start
+          cd ./plenary.nvim/start
           git clone https://github.com/nvim-lua/plenary.nvim
 
-          mkdir -p ~/.local/share/neogit-test/site/pack/telescope.nvim/start
-          cd ~/.local/share/neogit-test/site/pack/telescope.nvim/start
+          mkdir -p ./telescope.nvim/start
+          cd ./telescope.nvim/start
           git clone https://github.com/nvim-telescope/telescope.nvim
 
       - name: Install Neovim

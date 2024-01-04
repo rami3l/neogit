@@ -10,16 +10,16 @@ class NeovimClient
 
     lua "vim.opt.runtimepath:append('#{PROJECT_DIR}')"
 
-    if ENV["CI"].nil?
+    if ENV["CI"]
+      lua <<~LUA
+        vim.cmd.packadd("plenary.nvim")
+        vim.cmd.runtime("telescope.nvim")
+      LUA
+    else
       # Sets up the runtimepath
       runtime_dependencies.each do |dep|
         lua "vim.opt.runtimepath:append('#{dep}')"
       end
-    else
-      lua <<~LUA
-        vim.cmd([[runtime! plugin/plenary.vim]])
-        vim.cmd([[runtime! plugin/neogit.lua]])
-      LUA
     end
 
     lua <<~LUA
