@@ -1,8 +1,8 @@
 local util = require("tests.util.util")
 
 if os.getenv("CI") then
+  vim.opt.runtimepath:prepend(vim.fn.getcwd())
   local tmp_dir = vim.fn.tempname():match("(.*)/[^/]$") .. "/"
-  -- vim.opt.runtimepath:prepend(vim.fn.getcwd())
   util.ensure_installed("nvim-lua/plenary.nvim", tmp_dir)
 else
   util.ensure_installed("nvim-lua/plenary.nvim", util.neogit_test_base_dir)
