@@ -10,21 +10,23 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    env:
+      CI: "1"
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Dependencies
-        run: |
-          mkdir -p ~/.local/share/neogit-test/site/pack/
-          cd ~/.local/share/neogit-test/site/pack/
-
-          mkdir -p ./plenary.nvim/start
-          cd ./plenary.nvim/start
-          git clone https://github.com/nvim-lua/plenary.nvim
-
-          mkdir -p ./telescope.nvim/start
-          cd ./telescope.nvim/start
-          git clone https://github.com/nvim-telescope/telescope.nvim
+      # - name: Install Dependencies
+      #   run: |
+      #     mkdir -p ~/.local/share/neogit-test/site/pack/
+      #     cd ~/.local/share/neogit-test/site/pack/
+      #
+      #     mkdir -p ./plenary.nvim/start
+      #     cd ./plenary.nvim/start
+      #     git clone https://github.com/nvim-lua/plenary.nvim
+      #
+      #     mkdir -p ./telescope.nvim/start
+      #     cd ./telescope.nvim/start
+      #     git clone https://github.com/nvim-telescope/telescope.nvim
 
       - name: Install Neovim
         run: |
@@ -38,13 +40,9 @@ jobs:
 
       - name: Luassert Test
         continue-on-error: true
-        env:
-          ci: "1"
         run: |
           make test
 
       - name: E2E Test
-        env:
-          ci: "1"
         run: |
           bundle exec rspec
