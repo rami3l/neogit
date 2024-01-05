@@ -666,7 +666,7 @@ local function close(skip_close)
   M.status_buffer = nil
   vim.o.autochdir = M.prev_autochdir
   if M.old_cwd then
-    vim.cmd.lcd(M.old_cwd)
+    vim.cmd.lcd(vim.fn.fnameescape(M.old_cwd))
   end
 
   closing = false
@@ -1432,7 +1432,7 @@ function M.create(kind, cwd)
         M.old_cwd = vim.fn.getcwd(win)
 
         vim.api.nvim_win_call(win, function()
-          vim.cmd.lcd(cwd)
+          vim.cmd.lcd(vim.fn.fnameescape(cwd))
         end)
       end
 

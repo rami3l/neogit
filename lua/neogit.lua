@@ -102,7 +102,7 @@ function M.open(opts)
   else
     a.run(function()
       if status.status_buffer then
-        vim.cmd.lcd(opts.cwd)
+        vim.cmd.lcd(vim.fn.fnameescape(opts.cwd))
         status.refresh(nil, "open")
       else
         status.create(opts.kind, opts.cwd)

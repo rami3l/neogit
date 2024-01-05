@@ -30,7 +30,7 @@ M.init_repo = function()
 
   local status = require("neogit.status")
   status.cwd_changed = true
-  vim.cmd.lcd(directory)
+  vim.cmd.lcd(vim.fn.fnameescape(directory))
 
   if cli.is_inside_worktree() then
     if
