@@ -13,7 +13,8 @@ class NeovimClient
     if ENV["CI"]
       lua <<~LUA
         vim.cmd.packadd("plenary.nvim")
-        vim.cmd.runtime("telescope.nvim")
+        vim.cmd.runtime("plugin/plenary.vim")
+        vim.cmd.runtime("plugin/neogit.lua")
       LUA
     else
       # Sets up the runtimepath
