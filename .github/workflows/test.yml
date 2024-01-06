@@ -40,8 +40,9 @@ jobs:
 
       - name: Luassert Test
         continue-on-error: true
+
         run: |
-          make test
+          TEMP_DIR="${{ runner.temp }}" make test
 
       - name: E2E Test
         run: |
