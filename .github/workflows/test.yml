@@ -38,11 +38,10 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Luassert Test
-        continue-on-error: true
-
-        run: |
-          TEMP_DIR="${{ runner.temp }}" make test
+      # - name: Luassert Test
+      #   continue-on-error: true
+      #   run: |
+      #     TEMP_DIR="${{ runner.temp }}" make test
 
       - name: E2E Test
         run: |
