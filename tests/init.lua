@@ -1,13 +1,13 @@
 local util = require("tests.util.util")
 
 if os.getenv("CI") then
+  print("!!: " .. os.getenv("TEMP_DIR"))
   vim.opt.runtimepath:prepend(vim.fn.getcwd())
   util.ensure_installed("nvim-lua/plenary.nvim", os.getenv("TEMP_DIR"))
 else
   util.ensure_installed("nvim-lua/plenary.nvim", util.neogit_test_base_dir)
 end
 
-print(vim.inspect(vim.opt.runtimepath))
 require("plenary.test_harness").test_directory(
   os.getenv("TEST_FILES") == "" and "tests/specs" or os.getenv("TEST_FILES"),
   {
