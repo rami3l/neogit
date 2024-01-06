@@ -12,7 +12,7 @@ class NeovimClient
 
     if ENV["CI"]
       lua <<~LUA
-        vim.cmd.packadd("plenary.nvim")
+        vim.cmd.packloadall()
         vim.cmd.runtime("plugin/plenary.vim")
         vim.cmd.runtime("plugin/neogit.lua")
       LUA
@@ -66,7 +66,7 @@ class NeovimClient
   end
 
   def attach_child
-    Neovim.attach_child(["nvim", "--embed", "--clean", "--headless"])
+    Neovim.attach_child(["nvim", "--embed", "--headless"])
   end
 
   def runtime_dependencies
