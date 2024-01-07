@@ -8,20 +8,20 @@ class NeovimClient
   def setup
     @instance = attach_child
 
-    lua "vim.opt.runtimepath:append('#{PROJECT_DIR}')"
-
     if ENV["CI"]
       lua <<~LUA
-        vim.cmd.packloadall()
+        vim.opt.runtimepath:prepend("~/.local/share/neogit-test/site/pack/plenary.nvim/start/plenary")
         vim.cmd.runtime("plugin/plenary.vim")
         vim.cmd.runtime("plugin/neogit.lua")
       LUA
     else
       # Sets up the runtimepath
       runtime_dependencies.each do |dep|
-        lua "vim.opt.runtimepath:append('#{dep}')"
+        lua "vim.opt.runtimepath:prepend('#{dep}')"
       end
     end
+
+    lua "vim.opt.runtimepath:prepend('#{PROJECT_DIR}')"
 
     lua <<~LUA
       require('neogit').setup()
@@ -66,7 +66,7 @@ class NeovimClient
   end
 
   def attach_child
-    Neovim.attach_child(["nvim", "--embed", "--headless"])
+    Neovim.attach_child(["nvim", "--embed", "--clean", "--headless"])
   end
 
   def runtime_dependencies
