@@ -39,12 +39,15 @@ jobs:
         run: |
           make test
 
+      - uses: actions/checkout@v4
+        with:
+          repository: nvim-lua/plenary.nvim
+          path: ./plenary
+
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
 
       - name: E2E Test
-        env:
-          NVIM_APPNAME: neogit-test
         run: |
           bundle exec rspec
