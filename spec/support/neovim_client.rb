@@ -29,6 +29,7 @@ class NeovimClient
     LUA
 
     sleep(0.025) # Seems to be about right
+    print_screen
   end
 
   def print_screen
