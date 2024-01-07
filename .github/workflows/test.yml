@@ -15,6 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Neovim
+        run: |
+          wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
+          tar -zxf nvim-linux64.tar.gz
+          sudo ln -s $(pwd)/nvim-linux64/bin/nvim /usr/local/bin
+
       - name: Install Dependencies
         run: |
           mkdir -p ~/.local/share/neogit-test/site/pack/
@@ -28,21 +34,17 @@ jobs:
           cd ./telescope.nvim/start
           git clone https://github.com/nvim-telescope/telescope.nvim
 
-      - name: Install Neovim
-        run: |
-          wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
-          tar -zxf nvim-linux64.tar.gz
-          sudo ln -s $(pwd)/nvim-linux64/bin/nvim /usr/local/bin
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
       - name: Luassert Test
         continue-on-error: true
         run: |
           make test
 
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
       - name: E2E Test
+        env:
+          NVIM_APPNAME: neogit-test
         run: |
           bundle exec rspec
