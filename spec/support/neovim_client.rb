@@ -68,7 +68,11 @@ class NeovimClient
   end
 
   def attach_child
-    Neovim.attach_child(["nvim", "--embed", "--clean", "--headless"])
+    if ENV["CI"]
+      Neovim.attach_child(["nvim", "--embed", "--headless"])
+  else
+      Neovim.attach_child(["nvim", "--embed", "--clean", "--headless"])
+    end
   end
 
   def runtime_dependencies
