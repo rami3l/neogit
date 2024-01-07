@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "git", :git do
-  let(:git) { Git.init }
+  let(:git) { Git.open(Dir.pwd) }
 
   before do
     system("touch testfile")

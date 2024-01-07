@@ -32,6 +32,7 @@ RSpec.configure do |config|
   config.around(:each) do |example|
     Dir.mktmpdir do |tmp|
       Dir.chdir(tmp) do
+        Git.init
         example.run
       end
     end
