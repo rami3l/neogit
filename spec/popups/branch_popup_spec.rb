@@ -64,17 +64,24 @@ RSpec.describe "Branch Popup", :git, :nvim do
       # end
 
       it "lets you pick a base branch" do
+        puts("1")
         git.branch("new-base-branch").checkout
+        puts("2")
 
         nvim.input("feature-branch")
+        puts("3")
         nvim.feedkeys("bc")
+        puts("4")
         nvim.feedkeys("master<cr>")
+        puts("5")
 
         expect(git.current_branch).to eq "feature-branch"
+        puts("6")
 
         expect(
           git.merge_base("feature-branch", "master").first.sha
         ).to eq(git.revparse("master"))
+        puts("6")
       end
     end
   end
