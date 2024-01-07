@@ -29,9 +29,6 @@ class NeovimClient
     LUA
 
     sleep(0.025) # Seems to be about right
-    if ENV["CI"]
-      sleep 2
-    end
   end
 
   def print_screen
