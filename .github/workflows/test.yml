@@ -21,33 +21,23 @@ jobs:
           tar -zxf nvim-linux64.tar.gz
           sudo ln -s $(pwd)/nvim-linux64/bin/nvim /usr/local/bin
 
-      # - name: Install Dependencies
-      #   run: |
-      #     mkdir -p ~/.local/share/neogit-test/site/pack/
-      #     cd ~/.local/share/neogit-test/site/pack/
-      #
-      #     mkdir -p ./plenary.nvim/start
-      #     cd ./plenary.nvim/start
-      #     git clone https://github.com/nvim-lua/plenary.nvim
-      #
-      #     mkdir -p ./telescope.nvim/start
-      #     cd ./telescope.nvim/start
-      #     git clone https://github.com/nvim-telescope/telescope.nvim
-
-      - uses: actions/checkout@v4
-        with:
-          repository: nvim-lua/plenary.nvim
-          path: ~/.local/share/neogit-test/site/pack/plenary.nvim/start/plenary
-
-      - name: Luassert Test
-        continue-on-error: true
+      - name: Install Dependencies
         run: |
-          make test
+          mkdir -p ~/.local/share/nvim/site/pack/
+          cd ~/.local/share/nvim/site/pack/
 
-      - uses: actions/checkout@v4
-        with:
-          repository: nvim-lua/plenary.nvim
-          path: ~/.local/share/neogit-test/site/pack/plenary.nvim/start/plenary
+          mkdir -p ./plenary.nvim/start
+          cd ./plenary.nvim/start
+          git clone https://github.com/nvim-lua/plenary.nvim
+
+          mkdir -p ./telescope.nvim/start
+          cd ./telescope.nvim/start
+          git clone https://github.com/nvim-telescope/telescope.nvim
+
+      # - name: Luassert Test
+      #   continue-on-error: true
+      #   run: |
+      #     make test
 
       - uses: ruby/setup-ruby@v1
         with:
