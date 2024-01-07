@@ -8,12 +8,10 @@ class NeovimClient
   def setup
     @instance = attach_child
 
-    puts "!!!" + Dir.pwd
-
     if ENV["CI"]
       lua <<~LUA
-        -- vim.cmd.runtime("plugin/plenary.vim")
-        -- vim.cmd.runtime("plugin/neogit.lua")
+        vim.cmd.runtime("plugin/plenary.vim")
+        vim.cmd.runtime("plugin/neogit.lua")
       LUA
     else
       # Sets up the runtimepath
