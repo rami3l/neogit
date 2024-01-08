@@ -31,13 +31,13 @@ RSpec.describe "Branch Popup", :git, :nvim do
     end
 
     describe "Checkout local branch" do
-      # before { git.branch("new-local-branch").checkout }
-      #
-      # it "can checkout a local branch" do
-      #   nvim.feedkeys("bl")
-      #   nvim.feedkeys("master<cr>")
-      #   expect(git.current_branch).to eq "master"
-      # end
+      before { git.branch("new-local-branch").checkout }
+
+      it "can checkout a local branch" do
+        nvim.feedkeys("bl")
+        nvim.feedkeys("master<cr>")
+        expect(git.current_branch).to eq "master"
+      end
 
       it "creates and checks out a new local branch when choosing a remote"
     end
@@ -47,41 +47,34 @@ RSpec.describe "Branch Popup", :git, :nvim do
     end
 
     describe "Checkout new branch" do
-      # it "can create and checkout a branch" do
-      #   nvim.input("new-branch")
-      #   nvim.feedkeys("bc")
-      #   nvim.feedkeys("master<cr>")
-      #
-      #   expect(git.current_branch).to eq "new-branch"
-      # end
+      it "can create and checkout a branch" do
+        nvim.input("new-branch")
+        nvim.feedkeys("bc")
+        nvim.feedkeys("master<cr>")
 
-      # it "replaces spaces with dashes in user input" do
-      #   nvim.input("new branch with spaces")
-      #   nvim.feedkeys("bc")
-      #   nvim.feedkeys("master<cr>")
-      #
-      #   expect(git.current_branch).to eq "new-branch-with-spaces"
-      # end
+        expect(git.current_branch).to eq "new-branch"
+      end
+
+      it "replaces spaces with dashes in user input" do
+        nvim.input("new branch with spaces")
+        nvim.feedkeys("bc")
+        nvim.feedkeys("master<cr>")
+
+        expect(git.current_branch).to eq "new-branch-with-spaces"
+      end
 
       it "lets you pick a base branch" do
-        puts("1")
         git.branch("new-base-branch").checkout
-        puts("2")
 
         nvim.input("feature-branch")
-        puts("3")
         nvim.feedkeys("bc")
-        puts("4")
         nvim.feedkeys("master<cr>")
-        puts("5")
 
         expect(git.current_branch).to eq "feature-branch"
-        puts("6")
 
         expect(
           git.merge_base("feature-branch", "master").first.sha
         ).to eq(git.revparse("master"))
-        puts("6")
       end
     end
   end
