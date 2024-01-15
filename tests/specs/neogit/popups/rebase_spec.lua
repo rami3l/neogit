@@ -15,7 +15,7 @@ local function act(normal_cmd)
 end
 
 describe("rebase popup", function()
-  function test_reword(commit_to_reword, new_commit_message)
+  local function test_reword(commit_to_reword, new_commit_message)
     local original_branch = git.branch.current()
     CommitSelectViewBufferMock.add(git.rev_parse.oid(commit_to_reword))
     input.values = { new_commit_message }
