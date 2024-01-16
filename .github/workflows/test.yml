@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     env:
       CI: "1"
     steps:
@@ -44,5 +44,7 @@ jobs:
           bundler-cache: true
 
       - name: E2E Test
+        env:
+          NVIM_RUBY_LOG_LEVEL: "debug"
         run: |
           bundle exec rspec
