@@ -70,7 +70,7 @@ class NeovimClient
 
   def attach_child
     if ENV["CI"]
-      Neovim.attach_child(["nvim", "--embed", "--headless"])
+      Neovim.attach_child()
   else
       Neovim.attach_child(["nvim", "--embed", "--clean", "--headless"])
     end
