@@ -31,6 +31,11 @@ class NeovimClient
     sleep(0.025) # Seems to be about right
   end
 
+  def teardown
+    @instance.shutdown
+    @instance = nil
+  end
+
   def print_screen
     puts get_lines
   end
@@ -61,8 +66,6 @@ class NeovimClient
       mode,
       false
     )
-
-    @instance.feedkeys("", "x", true)
   end
 
   def attach_child
