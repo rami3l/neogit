@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     env:
       CI: "1"
     steps:
@@ -17,9 +17,9 @@ jobs:
 
       - name: Install Neovim
         run: |
-          wget https://github.com/neovim/neovim/releases/download/stable/nvim-macos.tar.gz
-          tar -zxf nvim-macos.tar.gz
-          sudo ln -s $(pwd)/nvim-macos/bin/nvim /usr/local/bin
+          wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
+          tar -zxf nvim-linux64.tar.gz
+          sudo ln -s $(pwd)/nvim-linux64/bin/nvim /usr/local/bin
 
       - name: Install Dependencies
         run: |
